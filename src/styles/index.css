@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Homepage Category demo */
+.category-container {
+  @apply h-[50%] bg-[#F3F5F7] flex gap-4 px-[60px] overflow-hidden;
+}
+
+.category-title {
+  @apply text-[45px] font-semibold;
+}
+
+.category-link {
+  @apply text-[18px] underline;
+}
+
+.category-image {
+  @apply overflow-hidden rounded-lg flex justify-center items-center h-full;
+}
