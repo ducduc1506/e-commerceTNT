@@ -1,0 +1,93 @@
+const AuthService = require("../services/authService");
+
+class AuthController {
+  static async register(req, res) {
+    try {
+      const { name, email, phone, password, role } = req.body;
+      const result = await AuthService.register({
+        name,
+        email,
+        phone,
+        password,
+        role,
+      });
+      if (result.success) {
+        return res.status(201).json(result);
+      }
+      return res.status(400).json(result);
+    } catch (error) {
+      console.error("Register Error:", error);
+      return res.status(500).json({
+        message: "Server Error!",
+      });
+    }
+  }
+
+  static async login(req, res) {
+    try {
+      const { emailPhone, password } = req.body;
+      const result = await AuthService.login(emailPhone, password);
+
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      // Set refreshToken vào HTTP-only cookie (bảo mật hơn localStorage)
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true, // Không cho phép truy cập bằng JavaScript
+        secure: process.env.NODE_ENV === "production", // Chỉ dùng HTTPS ở production
+        sameSite: "strict", // Chống CSRF
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Login success",
+        user: result.user,
+        accessToken: result.accessToken, // Trả về accessToken để sử dụng
+      });
+    } catch (error) {
+      console.error("Login Error:", error);
+      return res.status(500).json({ message: "Server Error!" });
+    }
+  }
+
+  static async logout(req, res) {
+    // Xóa refreshToken khỏi cookie
+    res.clearCookie("refreshToken");
+    return res.status(200).json({ message: "Logout success" });
+  }
+
+  static async refreshToken(req, res) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return res.status(403).json({ message: "No token provided" });
+      }
+
+      const result = await AuthService.refreshToken(refreshToken);
+      if (!result.success) {
+        return res.status(403).json(result);
+      }
+
+      // Set refreshToken mới vào cookie
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Refresh token success",
+        accessToken: result.accessToken,
+      });
+    } catch (error) {
+      console.error("Refresh Token Error:", error);
+      return res.status(500).json({ message: "Server Error!" });
+    }
+  }
+}
+
+module.exports = AuthController;
