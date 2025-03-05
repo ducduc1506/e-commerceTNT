@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useProduct from "../../../hooks/useProduct";
 
 import Description from "./Description";
 import Comment from "./Comment";
@@ -8,6 +9,10 @@ import Detail from "./Detail";
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const { product, loading, error } = useProduct(productId);
+  useEffect(() => {
+    console.log("🔥 Product cập nhật:", product);
+  }, [product]); // Chỉ log khi product thay đổi
   const [activeTab, setActiveTab] = useState("description");
 
   const menuItems = [
@@ -16,10 +21,14 @@ const ProductDetail = () => {
     { name: "review", label: "Review" },
   ];
 
+  if (loading) return <p>⏳ Đang tải dữ liệu...</p>;
+  if (error) return <p>❌ Lỗi khi tải sản phẩm: {error.message}</p>;
+  if (!product) return <p>⚠️ Không tìm thấy sản phẩm.</p>;
+
   const renderContent = () => {
     switch (activeTab) {
       case "description":
-        return <Description />;
+        return <Description desc={product.description} />;
       case "comments":
         return <Comment />;
       case "review":

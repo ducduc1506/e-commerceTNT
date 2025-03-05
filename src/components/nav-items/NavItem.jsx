@@ -1,10 +1,10 @@
 const NavItem = (props) => {
-  const { className, Content } = props;
+  const { className, Content, onClick } = props;
   return (
     <>
-      <a href="#" className={className}>
+      <button onClick={onClick} className={className}>
         {Content}
-      </a>
+      </button>
     </>
   );
 };

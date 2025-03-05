@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import productService from "../../../services/productService";
 import BtnAddNew from "../../../components/button/BtnAddNew";
 import Filter from "./components/Filter";
-import Pagination from "./components/Pagination";
+import Pagination from "../../../components/pagination/Pagination";
 import SearchInput from "./components/SearchInput";
 import TableProduct from "./components/TableProduct";
 

@@ -1,65 +1,63 @@
 import { useEffect, useState } from "react";
 import productService from "../../../services/productService";
+import Recommend from "./Recommend";
+import ProductImages from "./ProductImages";
+import cartService from "../../../services/cartService";
 
 const Detail = ({ productId }) => {
-  const recomendProducts = [
-    {
-      id: 1,
-      name: "Name product",
-      img: "https://via.placeholder.com/300",
-    },
-    {
-      id: 2,
-      name: "Name product",
-      img: "https://via.placeholder.com/300",
-    },
-    {
-      id: 3,
-      name: "Name product",
-      img: "https://via.placeholder.com/300",
-    },
-    {
-      id: 4,
-      name: "Name product",
-      img: "https://via.placeholder.com/300",
-    },
-  ];
+  const [sizeActive, setSizeActive] = useState(null);
 
-  console.log("🔍 productId:", productId);
   const [product, setProduct] = useState(null);
   useEffect(() => {
+    console.log("🔍 productId useEffect:", productId);
     const fecthProductById = async () => {
       try {
         const response = await productService.getProductById(productId);
-        setProduct(response.data);
+        console.log(response);
+        setProduct(response);
       } catch (error) {
         console.log(error);
       }
     };
     fecthProductById();
-  }, []);
+  }, [productId]);
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
+  const handleSizeActive = (size) => {
+    setSizeActive(size);
+  };
+
+  const handleAddToCart = async () => {
+    if (!sizeActive) return;
+
+    const selectedSize = product.sizes.find((size) => size.size === sizeActive);
+
+    console.log("Debug - sizeActive:", sizeActive);
+    console.log("Debug - selectedSize:", selectedSize);
+
+    if (!selectedSize) {
+      alert("Size không hợp lệ!");
+      return;
+    }
+
+    console.log("Debug - product_id:", product.id);
+    console.log("Debug - size_id:", selectedSize.id);
+
+    try {
+      await cartService.addToCart(product.id, selectedSize.id, 1);
+      alert("🛒 Sản phẩm đã được thêm vào giỏ hàng!");
+    } catch (error) {
+      alert(error.response?.data?.message || "Lỗi khi thêm vào giỏ hàng");
+    }
+  };
+
   return (
     <div className="flex flex-row gap-4">
       {/* image */}
-      <div className="w-[38%] flex flex-col gap-4">
-        <div className="w-full h-auto bg-gray-200">
-          <img
-            src={`${import.meta.env.VITE_API_URL}${product.main_image}`}
-            alt={product.name}
-          />
-        </div>
-        <div className="flex gap-4">
-          <div className="bg-slate-500 h-[140px] w-1/3">
-            <img src="https://via.placeholder.com/300" alt="product" />
-          </div>
-          <div className="bg-slate-500 h-[140px] w-1/3">
-            <img src="https://via.placeholder.com/300" alt="product" />
-          </div>
-          <div className="bg-slate-500 h-[140px] w-1/3">
-            <img src="https://via.placeholder.com/300" alt="product" />
-          </div>
-        </div>
-      </div>
+      <ProductImages product={product} />
       {/* Info */}
       <div className="w-[38%] flex flex-col gap-4 ">
         <div className="pb-2 flex flex-col gap-4 border-b-2 border-gray-300">
@@ -101,8 +99,13 @@ const Detail = ({ productId }) => {
               .filter((size) => size.quantity > 0) // Chỉ hiển thị size còn hàng
               .map((size) => (
                 <button
+                  onClick={() => handleSizeActive(size.size)}
                   key={size.size}
-                  className="h-[40px] w-[40px] border-2 border-gray-400 font-bold"
+                  className={`h-[40px] w-[40px] border-2 font-bold transition ${
+                    sizeActive === size.size
+                      ? "border-black"
+                      : "border-gray-400"
+                  }`}
                 >
                   {size.size}
                 </button>
@@ -110,27 +113,19 @@ const Detail = ({ productId }) => {
           </div>
         </div>
         <div>
-          <button className="w-full px-4 py-2 bg-black text-white text-[18px] font-medium rounded-lg">
+          <button
+            onClick={handleAddToCart}
+            disabled={!sizeActive} // Disable nếu chưa chọn size
+            className={`w-full px-4 py-2 text-white text-[18px] font-medium rounded-lg transition ${
+              sizeActive ? "bg-black" : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
             Add to Cart
           </button>
         </div>
       </div>
       {/* Recommend */}
-      <div className="w-[24%] flex flex-col gap-2 ml-4 border-gray-500">
-        <div className="pb-1 pl-2 border-b-2 border-gray-500 font-medium">
-          Có thể bạn quan tâm
-        </div>
-        {recomendProducts.map((product) => (
-          <div key={product.id} className="pl-2 h-[120px] flex gap-2">
-            <div className="h-full w-[120px] bg-gray-200">
-              <img src={product.img} alt="product" />
-            </div>
-            <div>
-              <p>{product.name}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <Recommend />
     </div>
   );
 };

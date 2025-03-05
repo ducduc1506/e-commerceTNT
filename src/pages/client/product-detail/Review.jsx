@@ -1,7 +1,7 @@
 const Review = () => {
   return (
     <div className="bg-gray-200 p-4 rounded-md">
-      <p>No review</p>
+      <p>Tính năng đang phát triển</p>
     </div>
   );
 };

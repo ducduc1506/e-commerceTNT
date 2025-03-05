@@ -1,74 +1,88 @@
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import banner from "../../../assets/images/product-page-banner.jpg";
-
+import productService from "../../../services/productService";
+import { categoryService } from "../../../services/categoryService";
 import Banner from "../../../components/banner/Banner";
+import Pagination from "../../../components/pagination/Pagination";
+import Filters from "./Filters";
+import ProductList from "./ProductList";
 
 const Products = () => {
-  const elements = [];
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  for (let i = 0; i < 20; i++) {
-    elements.push(
-      <div key={i} className="w-full flex flex-col gap-2">
-        <div className="w-full h-[300px] bg-gray-300"></div>
-        <div className="w-full h-24 bg-gray-300"></div>
-      </div>
-    );
-  }
+  const [filters, setFilters] = useState({
+    category_id: searchParams.get("category_id") || "",
+    price_range: searchParams.get("price_range") || "",
+    sort: searchParams.get("sort") || "",
+    page: Number(searchParams.get("page")) || 1,
+    limit: 8,
+  });
+
+  useEffect(() => {
+    setFilters({
+      category_id: searchParams.get("category_id") || "",
+      price_range: searchParams.get("price_range") || "",
+      sort: searchParams.get("sort") || "",
+      page: Number(searchParams.get("page")) || 1,
+      limit: 8,
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, [filters]); // Chỉ theo dõi `filters`
+
+  const fetchProducts = async () => {
+    try {
+      console.log("Filters before API call:", filters);
+      const query = {
+        ...filters,
+        category_id: filters.category_id || undefined, // Loại bỏ nếu trống
+      };
+      const result = await productService.getAllProducts(query);
+      setProducts(result?.products || []);
+      setTotalPages(Math.ceil(result?.total / filters.limit) || 1);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const result = await categoryService.getAllCategories();
+      setCategories(result || []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+      page: key === "page" ? value : 1, // Reset trang khi thay đổi bộ lọc
+    }));
+  };
+
   return (
-    <div className="w-full px-main-padding flex flex-col gap-8 mb-10">
+    <div className="w-full px-main-padding flex flex-col gap-8 mb-10 text-black bg-white">
       <Banner banner={banner} />
-
-      {/* Content */}
-      <div className="w-full flex flex-col gap-8">
-        {/* header */}
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-4">
-            <div>
-              <p className="font-medium">Danh mục</p>
-              <select name="categories" id="categories">
-                <option value="0">Tất cả</option>
-                <option value="1">Áo</option>
-                <option value="2">Quần</option>
-                <option value="3">Phụ kiện</option>
-              </select>
-            </div>
-            <div>
-              <p className="font-medium">Giá</p>
-              <select name="price" id="price">
-                <option value="0">Tất cả</option>
-                <option value="1">Dưới 1 triệu</option>
-                <option value="2">1 triệu - 3 triệu</option>
-                <option value="3">3 triệu - 5 triệu</option>
-                <option value="4">5 triệu - 10 triệu</option>
-                <option value="5">Trên 10 triệu</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <select name="sort" id="sort">
-              <option value="0">Sắp xếp</option>
-              <option value="1">Giá tăng dần</option>
-              <option value="2">Giá giảm dần</option>
-              <option value="3">Mới nhất</option>
-              <option value="4">Bán chạy</option>
-            </select>
-          </div>
-        </div>
-        {/* content */}
-        <div className="w-full grid grid-cols-4 gap-8">
-          {/* product */}
-          {elements}
-        </div>
-        {/* page */}
-        <div className="flex justify-center items-center gap-2">
-          <button className="w-8 h-8 bg-black text-white rounded-full">
-            1
-          </button>
-          <button className="w-8 h-8 bg-gray-300 rounded-full">2</button>
-          <p>...</p>
-          <button className="w-8 h-8 bg-gray-300 rounded-full">4</button>
-          <button className="w-8 h-8 bg-gray-300 rounded-full">5</button>
-        </div>
-      </div>
+      <Filters
+        filters={filters}
+        categories={categories}
+        onFilterChange={handleFilterChange}
+      />
+      <ProductList products={products} />
+      <Pagination
+        totalPages={totalPages}
+        currentPage={filters.page}
+        onPageChange={(page) => handleFilterChange("page", page)}
+      />
     </div>
   );
 };

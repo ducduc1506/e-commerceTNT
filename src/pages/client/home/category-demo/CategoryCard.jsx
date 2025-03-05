@@ -1,9 +1,9 @@
-const CategoryCard = ({ title, link, image }) => {
+const CategoryCard = ({ title, link, image, id }) => {
   return (
     <div className="category-container">
       <div className="mt-3">
         <h1 className="category-title">{title}</h1>
-        <a className="category-link" href="#">
+        <a className="category-link" href={`/products?category_id=${id}`}>
           {link}
         </a>
       </div>
