@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { Product, ProductImage, Category, ProductSize } = require("../models");
 const fs = require("fs");
 const path = require("path");
@@ -38,8 +38,7 @@ class ProductService {
   static async getAllWithPagination({
     search,
     category_id,
-    min_price,
-    max_price,
+    price_range,
     sort,
     page,
     limit,
@@ -65,16 +64,40 @@ class ProductService {
         whereClause.category_id = { [Op.in]: categoryIds };
       }
 
-      if (min_price || max_price) {
+      // Xử lý lọc theo khoảng giá
+      if (price_range) {
         whereClause.price = {};
-        if (min_price) whereClause.price[Op.gte] = min_price;
-        if (max_price) whereClause.price[Op.lte] = max_price;
+        switch (price_range) {
+          case "1": // Dưới 500.000
+            whereClause.price[Op.lt] = 500000;
+            break;
+          case "2": // 500.000 - 1.000.000
+            whereClause.price[Op.gte] = 500000;
+            whereClause.price[Op.lt] = 1000000;
+            break;
+          case "3": // 1.000.000 - 3.000.000
+            whereClause.price[Op.gte] = 1000000;
+            whereClause.price[Op.lt] = 3000000;
+            break;
+          case "4": // 3.000.000 - 5.000.000
+            whereClause.price[Op.gte] = 3000000;
+            whereClause.price[Op.lt] = 5000000;
+            break;
+          case "5": // 5.000.000 - 10.000.000
+            whereClause.price[Op.gte] = 5000000;
+            whereClause.price[Op.lt] = 10000000;
+            break;
+          case "6": // Trên 10.000.000
+            whereClause.price[Op.gte] = 10000000;
+            break;
+        }
       }
 
       let order = [["created_at", "DESC"]];
       if (sort === "price_asc") order = [["price", "ASC"]];
       if (sort === "price_desc") order = [["price", "DESC"]];
       if (sort === "oldest") order = [["created_at", "ASC"]];
+      if (sort === "random") order = Sequelize.literal("RANDOM()");
 
       const offset = (page - 1) * limit;
 
@@ -115,12 +138,12 @@ class ProductService {
           {
             model: ProductImage,
             as: "images", // Danh sách ảnh phụ
-            attributes: ["image_url"],
+            attributes: ["id", "image_url"],
           },
           {
             model: ProductSize,
             as: "sizes", // Danh sách size & số lượng
-            attributes: ["size", "quantity"],
+            attributes: ["id", "size", "quantity"],
           },
           {
             model: Category,

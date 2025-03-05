@@ -3,21 +3,19 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define("Cart", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   });
 
-  Cart.associate = function (models) {
-    Cart.belongsTo(models.User, {
-      foreignKey: "user_id",
-      as: "user",
-    });
+  Cart.associate = (models) => {
+    Cart.hasMany(models.CartItem, { foreignKey: "cart_id", as: "cartItems" });
   };
 
   return Cart;

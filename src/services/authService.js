@@ -94,9 +94,23 @@ class AuthService {
   // Refresh Token
   static async refreshToken(refreshToken) {
     try {
-      const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+      // Tìm user để lấy thông tin đầy đủ
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        return { success: false, message: "User not found" };
+      }
+
+      // Tạo cả access token và refresh token mới
       const accessToken = AuthService.generateAccessToken(user);
-      return { success: true, accessToken };
+      const newRefreshToken = AuthService.generateRefreshToken(user);
+
+      return {
+        success: true,
+        accessToken,
+        refreshToken: newRefreshToken,
+      };
     } catch (error) {
       console.error("Refresh Token Error:", error);
       return { success: false, message: "Invalid token" };

@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       },
       price: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       main_image: {

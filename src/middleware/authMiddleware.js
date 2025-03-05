@@ -3,17 +3,20 @@ require("dotenv").config();
 
 // ✅ Middleware kiểm tra JWT (Xác thực người dùng)
 const authenticateToken = (req, res, next) => {
-  //   console.log("req.headers", req.headers.token);
-  const authHeader = req.headers.token;
-  if (!authHeader)
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
     return res.status(401).json({ message: "No token provided" });
+  }
 
-  const token = authHeader.split(" ")[1]; // Lấy token từ "Bearer token"
-  if (!token) return res.status(401).json({ message: "No token provided" });
+  const token = authHeader.split(" ")[1];
+
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
 
-    req.user = user; // Gán user vào request
+    console.log("Decoded Token:", user); // 🔥 Xem thử user có dữ liệu id hay không
+    req.user = user;
     next();
   });
 };

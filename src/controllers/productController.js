@@ -92,8 +92,7 @@ class ProductController {
       const {
         search,
         category_id,
-        min_price,
-        max_price,
+        price_range,
         sort,
         page = 1,
         limit = 10,
@@ -102,8 +101,7 @@ class ProductController {
       const data = await ProductService.getAllWithPagination({
         search,
         category_id,
-        min_price,
-        max_price,
+        price_range,
         sort,
         page,
         limit,

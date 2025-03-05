@@ -32,19 +32,20 @@ class AuthController {
         return res.status(400).json(result);
       }
 
-      // Set refreshToken vào HTTP-only cookie (bảo mật hơn localStorage)
+      // Set refreshToken với cấu hình đầy đủ
       res.cookie("refreshToken", result.refreshToken, {
-        httpOnly: true, // Không cho phép truy cập bằng JavaScript
-        secure: process.env.NODE_ENV === "production", // Chỉ dùng HTTPS ở production
-        sameSite: "strict", // Chống CSRF
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Thay đổi 'strict' thành 'lax' hoặc 'none'
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/", // Đảm bảo cookie áp dụng cho toàn bộ trang
       });
 
       return res.status(200).json({
         success: true,
         message: "Login success",
         user: result.user,
-        accessToken: result.accessToken, // Trả về accessToken để sử dụng
+        accessToken: result.accessToken,
       });
     } catch (error) {
       console.error("Login Error:", error);

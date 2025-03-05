@@ -8,6 +8,7 @@ const sequelize = require("./config/database.js"); // Cấu hình sequelize
 const authRoutes = require("./routes/authRoutes.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
+const cartRoutes = require("./routes/cartRoutes.js");
 
 const app = express();
 app.use(
@@ -33,6 +34,7 @@ app.use(bodyParser.json()); // Để đọc dữ liệu JSON từ body
 app.use("/api", authRoutes);
 app.use("/api/admin", categoryRoutes);
 app.use("/api", productRoutes);
+app.use("/api", cartRoutes);
 
 // Kết nối với cơ sở dữ liệu và khởi động server
 sequelize
