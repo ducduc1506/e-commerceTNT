@@ -44,6 +44,58 @@ export const register = async (userData) => {
   }
 };
 
+export const changePassword = async (oldPassword, newPassword) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    const response = await axios.post(
+      `${API_URL}/change-password`,
+      { oldPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("❌ Change Password Error:", error.response?.data || error);
+    throw (
+      error.response?.data || { success: false, message: "Lỗi đổi mật khẩu" }
+    );
+  }
+};
+
+export const getCustomers = async () => {
+  const token = localStorage.getItem("accessToken");
+  const response = await axios.get(`${API_URL}/users`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.users;
+};
+
+export const addCustomer = async (userData) => {
+  const response = await axios.post(`${API_URL}/register`, userData);
+  return response.data.user;
+};
+
+export const deleteCustomer = async (id) => {
+  const token = localStorage.getItem("accessToken");
+  await axios.delete(`${API_URL}/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const updateUserRole = async (id, newRole) => {
+  const token = localStorage.getItem("accessToken");
+  await axios.put(
+    `${API_URL}/users/${id}/role`,
+    { role: newRole },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+};
+
 export const logoutUser = () => async (dispatch) => {
   try {
     await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });

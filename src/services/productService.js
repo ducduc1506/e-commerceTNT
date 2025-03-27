@@ -50,11 +50,14 @@ const productService = {
   },
   async deleteProduct(id) {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      return true;
+      const response = await axios.delete(`${API_URL}/${id}`);
+      return response.data; // Trả về dữ liệu từ API
     } catch (error) {
-      console.error(`Error deleting product with ID ${id}:`, error);
-      return false;
+      console.error(
+        `❌ Error deleting product with ID ${id}:`,
+        error.response?.data || error.message
+      );
+      throw error.response?.data || { message: "Lỗi khi xóa sản phẩm!" };
     }
   },
 };

@@ -114,15 +114,17 @@ const CreateProduct = () => {
       {/* Header */}
       <div>
         <button className="font-medium text-gray-500" onClick={handleBack}>
-          ← Back
+          ← Trở về
         </button>
-        <h1 className="text-2xl font-semibold">Add New Product</h1>
+        <h1 className="text-2xl font-semibold">Thêm sản phẩm mới</h1>
       </div>
       <form className="w-full flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="flex gap-6">
           {/* left */}
           <div className="w-2/3 bg-white p-4 rounded-md shadow-md flex flex-col gap-4">
-            <h1 className="text-[18px] font-medium text-black">Infomation</h1>
+            <h1 className="text-[18px] font-medium text-black">
+              Thông tin sản phẩm
+            </h1>
             <TextInput
               label="SKU"
               id="sku"
@@ -133,9 +135,9 @@ const CreateProduct = () => {
               }
             />
             <TextInput
-              label="Product Name"
+              label="Tên sản phẩm"
               id="name"
-              placeholder="Product Name"
+              placeholder="Tên sản phẩm"
               value={productData.name}
               onChange={(e) =>
                 setProductData({ ...productData, name: e.target.value })
@@ -149,7 +151,7 @@ const CreateProduct = () => {
             />
 
             <div className="w-full">
-              <p className="mb-2">Image</p>
+              <p className="mb-2">Ảnh đại diện</p>
               <FileUpload
                 onImageChange={(file) =>
                   setProductData((prev) => ({ ...prev, mainImage: file }))
@@ -158,7 +160,7 @@ const CreateProduct = () => {
             </div>
             {/* Ảnh phụ */}
             <div className="w-full">
-              <p className="mb-2">Additional Images</p>
+              <p className="mb-2">Ảnh phụ</p>
               <FileUploadMultiple
                 onImagesChange={(updatedImages) =>
                   setProductData((prev) => ({
@@ -172,7 +174,7 @@ const CreateProduct = () => {
           {/* right */}
           <div className="w-1/3 flex flex-col gap-4">
             <div className="bg-white p-4 rounded-md shadow-md">
-              <p className="font-medium text-black mb-4">Category</p>
+              <p className="font-medium text-black mb-4">Danh mục</p>
               <select
                 id="categoryId"
                 className="w-full p-2 border border-gray-300 rounded-md"
@@ -184,9 +186,9 @@ const CreateProduct = () => {
                   })
                 }
               >
-                <option value="">-- Select Category --</option>
+                <option value="">-- Chọn danh mục --</option>
                 {loadingCategories ? (
-                  <option>Loading categories...</option>
+                  <option>Đang tải danh mục...</option>
                 ) : (
                   categories.map((category) => (
                     <option key={category.id} value={category.id}>
@@ -226,7 +228,7 @@ const CreateProduct = () => {
         {/* submit */}
         <div className="flex justify-end gap-4">
           <BtnCancel onClick={handleBack} />
-          <BtnAddNew name="Add" loading={loading} disabled={loading} />
+          <BtnAddNew name="Thêm" loading={loading} disabled={loading} />
         </div>
       </form>
     </>

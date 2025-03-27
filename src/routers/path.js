@@ -13,6 +13,11 @@ const paths = {
   products: `${ROOTS.HOME}products`,
   productDetail: `${ROOTS.HOME}/products/:productId`,
   cart: `${ROOTS.HOME}cart`,
+  checkout: `${ROOTS.HOME}checkout`,
+  profile: `${ROOTS.HOME}profile`,
+  orderlist: `${ROOTS.HOME}profile/orderlist`,
+  orderDetail: `${ROOTS.HOME}profile/orderlist/:orderId`,
+  paymentReturn: `${ROOTS.HOME}payment-return`,
 
   // Admin
   categories: `${ROOTS.ADMIN}/categories`,

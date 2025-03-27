@@ -41,6 +41,20 @@ const Product = () => {
     fetchProducts();
   }, []);
 
+  // Hàm để định dạng giá
+  const formatPrice = (price) => {
+    return (
+      new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+        currencyDisplay: "symbol",
+      })
+        .format(price)
+        .replace("₫", "")
+        .trim() + " đ"
+    ); // Loại bỏ "₫" và thêm "đ"
+  };
+
   return (
     <div className="flex flex-col gap-8 mb-10">
       <div className="flex justify-between items-center">
@@ -73,7 +87,9 @@ const Product = () => {
               <h3 className="text-lg font-semibold text-black cursor-pointer">
                 {product.name}
               </h3>
-              <p className="text-sm text-black">{product.price}</p>
+              <p className="text-sm font-medium text-black">
+                {formatPrice(product.price)}
+              </p>
             </div>
           </SwiperSlide>
         ))}

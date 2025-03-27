@@ -15,24 +15,27 @@ const CategoryForm = ({ onSubmit, categories }) => {
       className="flex flex-col gap-2"
     >
       {/* Tên danh mục */}
-      <TextInput
-        label="Name Category:"
-        id="categoryName"
-        value={newCategory}
-        onChange={(e) => setNewCategory(e.target.value)}
-        placeholder="Enter category name"
-      />
+      <div className="px-4">
+        {" "}
+        <TextInput
+          label="Tên danh mục:"
+          id="categoryName"
+          value={newCategory}
+          onChange={(e) => setNewCategory(e.target.value)}
+          placeholder="Nhập tên danh mục"
+        />
+      </div>
 
       {/* Danh mục cha */}
       <div className="px-4 flex flex-col gap-2">
-        <label htmlFor="categoryParent">Category Parent:</label>
+        <label htmlFor="categoryParent">Danh mục cha:</label>
         <select
           id="categoryParent"
           className="outline-none px-3 py-2 border border-gray-400 rounded-md"
           value={categoryParent}
           onChange={(e) => setCategoryParent(e.target.value)}
         >
-          <option value="">No Parent</option>
+          <option value="">--Không--</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.category_name}
@@ -43,7 +46,7 @@ const CategoryForm = ({ onSubmit, categories }) => {
 
       {/* Chọn ảnh */}
       <div className="px-4 flex flex-col gap-2">
-        <label htmlFor="image">Image:</label>
+        <label htmlFor="image">Ảnh:</label>
         <input
           id="image"
           type="file"
@@ -56,9 +59,9 @@ const CategoryForm = ({ onSubmit, categories }) => {
       <div className="px-4 flex flex-row-reverse gap-2">
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
         >
-          Add
+          Thêm
         </button>
       </div>
     </form>

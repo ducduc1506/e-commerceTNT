@@ -88,13 +88,13 @@ const CategoryDetail = () => {
       <div className="flex justify-between items-center">
         <div>
           <button className="font-medium text-gray-500" onClick={handleBack}>
-            ←Back
+            ←Trở về
           </button>
           <h1 className="text-2xl font-semibold">{originalName}</h1>
         </div>
         <div className="flex gap-3">
           <BtnCancel onClick={handleBack} />
-          <BtnSave name="Save" onClick={handleUpdate} />
+          <BtnSave name="Lưu" onClick={handleUpdate} />
         </div>
       </div>
 
@@ -102,22 +102,22 @@ const CategoryDetail = () => {
       <div className="flex gap-6">
         <ProInCategory />
         <div className="w-1/3 h-80 py-4 px-3 rounded bg-white flex flex-col gap-4">
-          <h1 className="text-lg font-semibold">Category Information</h1>
+          <h1 className="text-lg font-semibold">Chi tiết danh mục</h1>
           <TextInput
-            label="Name Category:"
-            placeholder={"Name Category..."}
+            label="Tên danh mục:"
+            placeholder={"Tên danh mục..."}
             id={"nameCategory"}
             value={nameCategory}
             onChange={(e) => setNameCategory(e.target.value)}
           />
           <div className="flex flex-col gap-2">
-            <label>Parent Category:</label>
+            <label>Danh mục cha:</label>
             <select
               className="border border-gray-200 px-3 py-2 rounded-sm outline-none"
               value={categoryParent}
               onChange={(e) => setCategoryParent(e.target.value)}
             >
-              <option value="">No Parent</option>
+              <option value="">--Không--</option>
               {categories
                 .filter((category) => category.id !== Number(categoryId)) //  Lọc bỏ chính nó
                 .map((category) => (
@@ -128,7 +128,7 @@ const CategoryDetail = () => {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <label>Image:</label>
+            <label>Ảnh:</label>
             <input
               type="file"
               className="border border-gray-200 px-3 py-2 rounded-sm outline-none"
@@ -141,7 +141,7 @@ const CategoryDetail = () => {
       {/* Footer */}
       <div className="flex justify-center gap-3 mt-4">
         <BtnDelete
-          name="Delete Category"
+          name="Xóa danh mục"
           onClick={() => setIsDeleteModalOpen(true)}
         />
       </div>

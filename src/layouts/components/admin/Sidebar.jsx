@@ -16,27 +16,27 @@ const Sidebar = () => {
   const menuItems = [
     {
       name: "",
-      label: "Dashboard",
+      label: "Trang chủ",
       icon: <FontAwesomeIcon icon={faTableColumns} />,
     },
     {
       name: "/categories",
-      label: "Category",
+      label: "Quản lý danh mục",
       icon: <FontAwesomeIcon icon={faLayerGroup} />,
     },
     {
       name: "/products",
-      label: "Products",
+      label: "Quản lý sản phẩm",
       icon: <FontAwesomeIcon icon={faShirt} />,
     },
     {
       name: "/orders",
-      label: "Orders List",
+      label: "Quản lý đơn hàng",
       icon: <FontAwesomeIcon icon={faCartShopping} />,
     },
     {
       name: "/users",
-      label: "Customers",
+      label: "Quản lý người dùng",
       icon: <FontAwesomeIcon icon={faUserTie} />,
     },
   ];

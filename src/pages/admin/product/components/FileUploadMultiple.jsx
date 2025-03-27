@@ -48,10 +48,6 @@ const FileUploadMultiple = ({ onImagesChange, defaultImages = [] }) => {
 
   return (
     <div className="w-full">
-      <label className="block mb-2 text-sm font-medium text-gray-900">
-        Upload multiple images
-      </label>
-
       {/* File Input */}
       <input
         type="file"
@@ -65,7 +61,7 @@ const FileUploadMultiple = ({ onImagesChange, defaultImages = [] }) => {
         htmlFor="file-upload-multiple"
         className="cursor-pointer flex items-center justify-center w-full p-4 border-2 border-dashed border-gray-300 hover:border-black rounded-md"
       >
-        Click to upload or drag & drop
+        Click hoặc kéo ảnh vào đây để tải lên
       </label>
 
       {/* Preview */}

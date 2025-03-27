@@ -19,7 +19,7 @@ const TextEditor = ({ defaultDes, onChange }) => {
 
   return (
     <div className="w-full">
-      <p className="mb-1">Description</p>
+      <p className="mb-1">Mô tả</p>
       <Editor
         apiKey="moe3bztof70vvogqr7l0lzbvet2o4o79cptwecrhv1v0krj3"
         value={content}

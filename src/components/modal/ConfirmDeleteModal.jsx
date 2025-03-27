@@ -1,4 +1,12 @@
-const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
+import { toast } from "react-toastify";
+
+const ConfirmDeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  itemName,
+  isLoading,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -11,18 +19,21 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, itemName }) => {
         <div className="mt-4 flex justify-end gap-3">
           <button
             onClick={onClose}
+            disabled={isLoading}
             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
           >
             Hủy
           </button>
           <button
-            onClick={async () => {
-              await onConfirm(); // Đợi onConfirm chạy xong trước khi đóng modal
-              onClose(); // Đóng modal
-            }}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+            onClick={onConfirm}
+            disabled={isLoading}
+            className={`px-4 py-2 rounded transition ${
+              isLoading
+                ? "bg-gray-500"
+                : "bg-red-600 hover:bg-red-700 text-white"
+            }`}
           >
-            Xác nhận
+            {isLoading ? "Đang xóa..." : "Xác nhận"}
           </button>
         </div>
       </div>

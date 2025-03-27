@@ -12,7 +12,7 @@ const Size = ({ size, idSize, value, onChange }) => {
       <TextInput
         id={idSize}
         value={value}
-        placeholder="Quantity"
+        placeholder="Số lượng"
         onChange={onChange} // 🟢 Sử dụng handleChange
       />
     </div>

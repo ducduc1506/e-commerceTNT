@@ -36,7 +36,7 @@ const Category = () => {
     return (
       <div className="flex justify-center items-center text-red-500">
         <span className="text-xl font-semibold">
-          Error loading categories. Please try again.
+          Lỗi khi tải danh sách danh mục.
         </span>
       </div>
     );
@@ -50,13 +50,13 @@ const Category = () => {
         onCategoryAdded={handleCategoryAdded}
       />
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Categories</h1>
-        <BtnAddNew name="Add Category" onClick={handleOpenModal} />
+        <h1 className="text-2xl font-semibold">Danh mục</h1>
+        <BtnAddNew name="Thêm danh mục" onClick={handleOpenModal} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.length === 0 ? (
           <div className="col-span-4 text-center text-lg font-semibold">
-            No categories found.
+            Không có danh mục nào.
           </div>
         ) : (
           categories.map((category) => (
@@ -69,7 +69,7 @@ const Category = () => {
                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-6 py-1 rounded-md opacity-0 group-hover:opacity-100 transition duration-200 hover:bg-slate-200 z-10"
                   onClick={() => navigate(`/admin/categories/${category.id}`)}
                 >
-                  Edit
+                  Chi tiết
                 </button>
                 <img
                   src={
@@ -84,7 +84,7 @@ const Category = () => {
               <h1 className="text-xl font-semibold mt-4">
                 {category.category_name}
               </h1>
-              <p className="text-gray-500">50 Items</p>
+              <p className="text-gray-500">50 sản phẩm</p>
             </div>
           ))
         )}

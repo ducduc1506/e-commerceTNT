@@ -76,8 +76,10 @@ export default function FileUpload({ defaultImage, onImageChange }) {
           htmlFor="file-upload"
           className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-black transition p-4"
         >
-          <p>Add File</p>
-          <p className="mt-2 text-gray-600 text-sm">Or drag and drop files</p>
+          <p>Chọn ảnh</p>
+          <p className="mt-2 text-gray-600 text-sm">
+            Click hoặc kéo ảnh vào đây
+          </p>
         </label>
       )}
 

@@ -147,13 +147,15 @@ const AdminProductDetail = () => {
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-semibold">Edit Product</h1>
+        <h1 className="text-2xl font-semibold">Chỉnh sửa sản phẩm</h1>
       </div>
 
       <form className="w-full flex flex-col gap-6">
         <div className="flex gap-6">
           <div className="w-2/3 bg-white p-4 rounded-md shadow-md flex flex-col gap-4">
-            <h1 className="text-[18px] font-medium text-black">Information</h1>
+            <h1 className="text-[18px] font-medium text-black">
+              Thông tin sản phẩm
+            </h1>
 
             <TextInput
               label="SKU"
@@ -162,7 +164,7 @@ const AdminProductDetail = () => {
               onChange={(e) => setProduct({ ...product, sku: e.target.value })}
             />
             <TextInput
-              label="Product Name"
+              label="Tên sản phẩm"
               id="name"
               value={product.name}
               onChange={(e) => setProduct({ ...product, name: e.target.value })}
@@ -176,7 +178,7 @@ const AdminProductDetail = () => {
             />
 
             <div className="w-full">
-              <p className="mb-2">Main Image</p>
+              <p className="mb-2">Ảnh đại diện</p>
               <FileUpload
                 defaultImage={
                   mainImage
@@ -190,7 +192,7 @@ const AdminProductDetail = () => {
             </div>
 
             <div className="w-full">
-              <p className="mb-2">Additional Images</p>
+              <p className="mb-2">Ảnh phụ</p>
               <FileUploadMultiple
                 onImagesChange={handleAdditionalImagesChange}
                 defaultImages={
@@ -207,7 +209,7 @@ const AdminProductDetail = () => {
 
           <div className="w-1/3 flex flex-col gap-4">
             <div className="bg-white p-4 rounded-md shadow-md">
-              <p className="font-medium text-black mb-4">Category</p>
+              <p className="font-medium text-black mb-4">Danh mục</p>
               <select
                 name="category"
                 id="category"
@@ -226,7 +228,7 @@ const AdminProductDetail = () => {
             </div>
             <div className="bg-white p-4 rounded-md shadow-md">
               <TextInput
-                label="Price (VNĐ)"
+                label="Giá (VNĐ)"
                 id="price"
                 value={product.price}
                 onChange={(e) =>
@@ -258,7 +260,7 @@ const AdminProductDetail = () => {
 
         <div className="flex justify-end gap-4">
           <BtnCancel onClick={() => navigate("/admin/products")} />
-          <BtnSave name="Save" onClick={handleSave} />
+          <BtnSave name="Cập nhật" onClick={handleSave} />
         </div>
       </form>
     </>

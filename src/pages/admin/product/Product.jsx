@@ -16,7 +16,7 @@ const Product = () => {
     sort: "newest",
     search: "",
     page: 1,
-    limit: 3,
+    limit: 8,
   });
 
   const navigate = useNavigate();
@@ -48,9 +48,9 @@ const Product = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Products</h1>
+        <h1 className="text-2xl font-semibold">Sản phẩm</h1>
         <BtnAddNew
-          name="Add Product"
+          name="Thêm sản phẩm"
           onClick={() => navigate("/admin/products/create")}
         />
       </div>
@@ -75,7 +75,7 @@ const Product = () => {
               setFilters({ ...filters, page: newPage })
             }
           />
-          <p className="text-gray-700 font-medium">{total} Results</p>
+          <p className="text-gray-700 font-medium">{total} Sản phẩm</p>
         </div>
       </div>
     </>

@@ -56,7 +56,7 @@ const ModalAdd = ({ isModalOpen, closeModal, onCategoryAdded }) => {
     >
       <div className="w-[40%] pb-5 bg-white rounded-lg flex flex-col gap-2 overflow-hidden absolute top-[17%]">
         <div className="w-full h-[40px] bg-black flex justify-between items-center">
-          <h1 className="text-white font-semibold px-4">Add Category</h1>
+          <h1 className="text-white font-semibold px-4">Thêm danh mục mới</h1>
           <button
             className="text-white font-bold px-4 py-2"
             onClick={closeModal}

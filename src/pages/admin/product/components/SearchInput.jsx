@@ -24,7 +24,7 @@ const SearchInput = ({ onSearch }) => {
       />
       <input
         className="w-80 py-2 pl-8 outline-none border border-gray-300"
-        placeholder="Search by ID or Name..."
+        placeholder="Tìm kiếm...."
         type="text"
         value={query}
         onChange={handleChange}

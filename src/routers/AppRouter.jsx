@@ -11,6 +11,11 @@ import Home from "../pages/client/home/Home";
 import Products from "../pages/client/list-product/Products";
 import ProductDetail from "../pages/client/product-detail/ProductDetail";
 import CartPage from "../pages/client/cart/CartPage";
+import CheckoutPage from "../pages/client/checkout/CheckoutPage";
+import Profile from "../pages/client/profile/Profile";
+import OrderListPage from "../pages/client/order/OrderListPage";
+import OrderDetail from "../pages/client/order/OrderDetail";
+import PaymentReturn from "../pages/client/checkout/PaymentReturn";
 
 // Admin layout
 import AdminLayout from "../layouts/AdminLayout";
@@ -35,6 +40,11 @@ const AppRouter = () => {
           <Route path={paths.products} element={<Products />} />
           <Route path={paths.productDetail} element={<ProductDetail />} />
           <Route path={paths.cart} element={<CartPage />} />
+          <Route path={paths.checkout} element={<CheckoutPage />} />
+          <Route path={paths.profile} element={<Profile />} />
+          <Route path={paths.orderlist} element={<OrderListPage />} />
+          <Route path={paths.orderDetail} element={<OrderDetail />} />
+          <Route path={paths.paymentReturn} element={<PaymentReturn />} />
         </Route>
 
         <Route
