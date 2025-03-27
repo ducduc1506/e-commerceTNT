@@ -1,5 +1,11 @@
 const { Op, Sequelize } = require("sequelize");
-const { Product, ProductImage, Category, ProductSize } = require("../models");
+const {
+  Product,
+  ProductImage,
+  Category,
+  ProductSize,
+  OrderItem,
+} = require("../models");
 const fs = require("fs");
 const path = require("path");
 
@@ -137,18 +143,25 @@ class ProductService {
         include: [
           {
             model: ProductImage,
-            as: "images", // Danh sách ảnh phụ
+            as: "images",
             attributes: ["id", "image_url"],
           },
           {
             model: ProductSize,
-            as: "sizes", // Danh sách size & số lượng
+            as: "sizes",
             attributes: ["id", "size", "quantity"],
           },
           {
             model: Category,
-            as: "categoryData", // Thông tin danh mục
-            attributes: ["id", "category_name"],
+            as: "categoryData",
+            attributes: ["id", "category_name", "parent_id"],
+            include: [
+              {
+                model: Category,
+                as: "parent", // Lấy danh mục cha
+                attributes: ["id", "category_name"],
+              },
+            ],
           },
         ],
       });
@@ -263,14 +276,24 @@ class ProductService {
   static async delete(id) {
     try {
       const product = await Product.findByPk(id, {
-        include: [{ model: ProductImage, as: "images" }],
+        include: [
+          { model: ProductImage, as: "images" },
+          { model: OrderItem, as: "order_items", required: false },
+        ],
       });
 
       if (!product) {
-        throw new Error("Product not found");
+        return { success: false, message: "Sản phẩm không tồn tại!" };
       }
 
-      // ===== XÓA ẢNH CHÍNH =====
+      if (product.order_items && product.order_items.length > 0) {
+        return {
+          success: false,
+          message: "Sản phẩm đã có trong đơn hàng, không thể xóa!",
+        };
+      }
+
+      // Xóa ảnh chính
       if (product.main_image) {
         const mainImagePath = path.join(
           __dirname,
@@ -283,7 +306,7 @@ class ProductService {
         }
       }
 
-      // ===== XÓA ẢNH PHỤ =====
+      // Xóa ảnh phụ
       if (product.images && product.images.length > 0) {
         for (const image of product.images) {
           const imagePath = path.join(
@@ -299,15 +322,15 @@ class ProductService {
         await ProductImage.destroy({ where: { product_id: id } });
       }
 
-      // ===== XÓA SIZE =====
+      // Xóa kích cỡ
       await ProductSize.destroy({ where: { product_id: id } });
 
-      // ===== XÓA SẢN PHẨM =====
+      // Xóa sản phẩm
       await product.destroy();
 
-      return { message: "Product deleted successfully" };
+      return { success: true, message: "Sản phẩm đã được xóa thành công!" };
     } catch (error) {
-      throw error;
+      throw new Error("Lỗi khi xóa sản phẩm!");
     }
   }
 }

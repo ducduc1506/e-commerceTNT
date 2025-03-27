@@ -1,4 +1,5 @@
 const AuthService = require("../services/authService");
+const User = require("../models").User;
 
 class AuthController {
   static async register(req, res) {
@@ -50,6 +51,89 @@ class AuthController {
     } catch (error) {
       console.error("Login Error:", error);
       return res.status(500).json({ message: "Server Error!" });
+    }
+  }
+
+  static async changePassword(req, res) {
+    try {
+      const userId = req.user.id; // Lấy từ token
+      const { oldPassword, newPassword } = req.body;
+
+      const result = await AuthService.changePassword(
+        userId,
+        oldPassword,
+        newPassword
+      );
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error("Change Password Error:", error);
+      return res.status(500).json({ message: "Server Error!" });
+    }
+  }
+
+  static async getUsers(req, res) {
+    try {
+      const users = await User.findAll({
+        order: [["id", "ASC"]],
+        attributes: ["id", "name", "email", "phone", "role", "createdAt"],
+      });
+
+      return res.status(200).json({ success: true, users });
+    } catch (error) {
+      console.error("Fetch Users Error:", error);
+      return res.status(500).json({ success: false, message: "Lỗi server!" });
+    }
+  }
+
+  // Xóa tài khoản (Admin)
+  static async deleteUser(req, res) {
+    try {
+      const { userId } = req.params;
+
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User không tồn tại" });
+      }
+
+      await user.destroy();
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Xóa tài khoản thành công" });
+    } catch (error) {
+      console.error("Delete User Error:", error);
+      return res.status(500).json({ success: false, message: "Lỗi server!" });
+    }
+  }
+
+  // Cập nhật vai trò người dùng (Admin)
+  static async updateUserRole(req, res) {
+    try {
+      const { userId } = req.params;
+      const { role } = req.body;
+
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User không tồn tại" });
+      }
+
+      user.role = role;
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Cập nhật vai trò thành công" });
+    } catch (error) {
+      console.error("Update User Role Error:", error);
+      return res.status(500).json({ success: false, message: "Lỗi server!" });
     }
   }
 

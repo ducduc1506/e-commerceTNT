@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "product_id",
         as: "sizes",
       }); //  Một sản phẩm có nhiều kích cỡ
+      Product.hasMany(models.OrderItem, {
+        foreignKey: "product_id",
+        as: "order_items",
+      }); //  Một sản phẩm có thể có trong nhiều đơn hàng
     }
   }
 

@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// ✅ Middleware kiểm tra JWT (Xác thực người dùng)
+// Middleware kiểm tra JWT (Xác thực người dùng)
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  console.log("Authorization Header:", authHeader);
   if (!authHeader) {
     return res.status(401).json({ message: "No token provided" });
   }
@@ -15,7 +16,7 @@ const authenticateToken = (req, res, next) => {
       return res.status(403).json({ message: "Invalid token" });
     }
 
-    console.log("Decoded Token:", user); // 🔥 Xem thử user có dữ liệu id hay không
+    console.log("Decoded Token:", user);
     req.user = user;
     next();
   });

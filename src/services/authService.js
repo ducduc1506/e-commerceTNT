@@ -27,7 +27,10 @@ class AuthService {
         },
       });
       if (user) {
-        return { success: false, message: "Email or Phone already exists" };
+        return {
+          success: false,
+          message: "Email hoặc số điện thoại đã tồn tại",
+        };
       }
       const salt = await bcrypt.genSaltSync(10);
       const hashPassword = await bcrypt.hashSync(password, salt);
@@ -62,11 +65,17 @@ class AuthService {
         },
       });
       if (!user) {
-        return { success: false, message: "User not found" };
+        return {
+          success: false,
+          message: "Tài khoản hoặc mật khẩu không chính xác",
+        };
       }
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return { success: false, message: "Password is incorrect" };
+        return {
+          success: false,
+          message: "Tài khoản hoặc mật khẩu không chính xác",
+        };
       }
 
       if (user && isMatch) {
@@ -74,7 +83,7 @@ class AuthService {
         const refreshToken = AuthService.generateRefreshToken(user);
         return {
           success: true,
-          message: "Login success",
+          message: "Đăng nhập thành công",
           user: {
             id: user.id,
             name: user.name,
@@ -90,6 +99,78 @@ class AuthService {
       return { success: false, message: "Server Error!" };
     }
   }
+
+  // Đổi mật khẩu
+  static async changePassword(userId, oldPassword, newPassword) {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return { success: false, message: "User not found" };
+      }
+
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return { success: false, message: "Mật khẩu cũ không đúng" };
+      }
+
+      const salt = await bcrypt.genSaltSync(10);
+      const hashPassword = await bcrypt.hashSync(newPassword, salt);
+
+      user.password = hashPassword;
+      await user.save();
+
+      return { success: true, message: "Thay đổi mật khẩu thành công" };
+    } catch (error) {
+      console.error("Lỗi khi thay đổi mật khẩu:", error);
+      return { success: false, message: "Server Error!" };
+    }
+  }
+
+  // static async getAllUsers() {
+  //   try {
+  //     const users = await User.findAll({
+  //       attributes: ["id", "name", "email", "phone", "role", "createdAt"], // Chỉ lấy các thông tin cần thiết
+  //     });
+  //     return { success: true, users };
+  //   } catch (error) {
+  //     console.error("Lỗi khi lấy danh sách người dùng:", error);
+  //     return { success: false, message: "Server Error!" };
+  //   }
+  // }
+
+  // // Xóa tài khoản (chỉ admin được phép)
+  // static async deleteUser(userId) {
+  //   try {
+  //     const user = await User.findByPk(userId);
+  //     if (!user) {
+  //       return { success: false, message: "Không tìm thấy người dùng" };
+  //     }
+
+  //     await user.destroy();
+  //     return { success: true, message: "Xóa tài khoản thành công" };
+  //   } catch (error) {
+  //     console.error("Lỗi khi xóa tài khoản:", error);
+  //     return { success: false, message: "Server Error!" };
+  //   }
+  // }
+
+  // // Cập nhật quyền (chỉ admin có quyền thay đổi)
+  // static async updateRole(userId, newRole) {
+  //   try {
+  //     const user = await User.findByPk(userId);
+  //     if (!user) {
+  //       return { success: false, message: "Không tìm thấy người dùng" };
+  //     }
+
+  //     user.role = newRole;
+  //     await user.save();
+
+  //     return { success: true, message: "Cập nhật quyền thành công", user };
+  //   } catch (error) {
+  //     console.error("Lỗi khi cập nhật quyền:", error);
+  //     return { success: false, message: "Server Error!" };
+  //   }
+  // }
 
   // Refresh Token
   static async refreshToken(refreshToken) {

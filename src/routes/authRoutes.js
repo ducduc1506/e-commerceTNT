@@ -9,6 +9,31 @@ const {
 router.post("/register", AuthController.register);
 router.post("/login", AuthController.login);
 
+router.post(
+  "/change-password",
+  authenticateToken,
+  AuthController.changePassword
+);
+
+router.get(
+  "/users",
+  authenticateToken,
+  authorizeAdmin,
+  AuthController.getUsers
+);
+router.delete(
+  "/users/:userId",
+  authenticateToken,
+  authorizeAdmin,
+  AuthController.deleteUser
+);
+router.put(
+  "/users/:userId/role",
+  authenticateToken,
+  authorizeAdmin,
+  AuthController.updateUserRole
+);
+
 router.post("/logout", authenticateToken, AuthController.logout);
 router.post("/refresh-token", AuthController.refreshToken);
 

@@ -9,6 +9,9 @@ const authRoutes = require("./routes/authRoutes.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const cartRoutes = require("./routes/cartRoutes.js");
+const orderRoutes = require("./routes/orderRoutes.js");
+const chatbotRoutes = require("./routes/chatbotRoutes.js");
+const zalopayRoutes = require("./routes/payment.js");
 
 const app = express();
 app.use(
@@ -35,6 +38,9 @@ app.use("/api", authRoutes);
 app.use("/api/admin", categoryRoutes);
 app.use("/api", productRoutes);
 app.use("/api", cartRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", chatbotRoutes);
+app.use("/api", zalopayRoutes);
 
 // Kết nối với cơ sở dữ liệu và khởi động server
 sequelize

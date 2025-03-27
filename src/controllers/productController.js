@@ -165,9 +165,16 @@ class ProductController {
     try {
       const { id } = req.params;
       const result = await ProductService.delete(id);
-      res.json(result);
+
+      if (!result.success) {
+        return res.status(400).json(result); // Trả về lỗi 400 khi không thể xóa
+      }
+
+      res.status(200).json(result); // Trả về thành công
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res
+        .status(500)
+        .json({ success: false, message: "Lỗi server khi xóa sản phẩm!" });
     }
   }
 }
